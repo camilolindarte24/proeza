@@ -16,7 +16,7 @@ export default function PartsSearch() {
 
   const searchVehicle = async () => {
     if (!licensePlate.trim()) {
-      setError("Por favor ingresa un número de placa válido");
+      setError("Por favor ingresa un número de placa válido.");
       return;
     }
 
