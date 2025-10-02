@@ -1,9 +1,9 @@
 import { defineConfig } from "vite";
-import vue from "@vitejs/plugin-vue"; // o react, según tu proyecto
+import react from "@vitejs/plugin-react";
 import path from "path";
 
 export default defineConfig({
-  plugins: [vue()], // cambia según tu framework
+  plugins: [react()],
   build: {
     outDir: "dist",
   },
