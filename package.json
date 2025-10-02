@@ -3,7 +3,8 @@
     "@hono/zod-validator": "^0.5.0",
     "@types/leaflet": "^1.9.20",
     "axios": "^1.12.2",
-    "hono": "4.7.7",
+    "better-sqlite3": "^12.4.1",
+    "hono": "^4.7.7",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.510.0",
     "react": "19.0.0",
@@ -11,13 +12,14 @@
     "react-leaflet": "^5.0.0",
     "react-router": "^7.5.3",
     "xml2js": "^0.6.2",
-    "zod": "^3.24.3"
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@cloudflare/vite-plugin": "^1.12.0",
     "@eslint/js": "9.25.1",
     "@getmocha/users-service": "^0.0.4",
     "@getmocha/vite-plugins": "latest",
+    "@types/better-sqlite3": "^7.6.13",
     "@types/node": "22.14.1",
     "@types/react": "19.0.10",
     "@types/react-dom": "19.0.4",

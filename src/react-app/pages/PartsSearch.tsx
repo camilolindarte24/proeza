@@ -1,16 +1,8 @@
 import { useState } from "react";
 import { Search, Car, AlertCircle, CheckCircle, Loader2 } from "lucide-react";
 import axios from "axios";
-import { parseStringPromise } from "xml2js";
 
-interface VehicleInfo {
-  license_plate: string;
-  brand?: string;
-  model?: string;
-  year?: number;
-  engine_type?: string;
-  vehicle_type?: string;
-}
+
 
 export default function PartsSearch() {
   const [licensePlate, setLicensePlate] = useState("");
