@@ -1,0 +1,18 @@
+# netlify.toml
+[build]
+  # Comando para instalar dependencias ignorando conflictos de peerDeps y construir tu proyecto
+  command = "npm install --legacy-peer-deps && npm run build"
+  # Carpeta que Netlify servirá como sitio (para Vite/React normalmente es 'dist')
+  publish = "dist"
+
+# Opcional: Variables de entorno
+[build.environment]
+  NODE_VERSION = "22.20.0"
+  # Si usas SQLite en producción, puedes definir aquí la ruta de tu DB
+  DATABASE_FILE = "database.sqlite"
+
+# Redirigir todas las rutas a index.html para SPA
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
