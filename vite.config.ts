@@ -1,21 +1,15 @@
-import path from "path";
 import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
-import { cloudflare } from "@cloudflare/vite-plugin";
-import { mochaPlugins } from "@getmocha/vite-plugins";
+import vue from "@vitejs/plugin-vue"; // o react, según tu proyecto
+import path from "path";
 
 export default defineConfig({
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  plugins: [...mochaPlugins(process.env as any), react(), cloudflare()],
-  server: {
-    allowedHosts: true,
-  },
+  plugins: [vue()], // cambia según tu framework
   build: {
-    chunkSizeWarningLimit: 5000,
+    outDir: "dist",
   },
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./src"),
+      "@": path.resolve(__dirname, "src"),
     },
   },
 });
