@@ -11,8 +11,15 @@
   # Si usas SQLite en producción, puedes definir aquí la ruta de tu DB
   DATABASE_FILE = "database.sqlite"
 
-# Redirigir todas las rutas a index.html para SPA
+# Redirige todas las rutas SPA a index.html
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
+
+# Redirige las llamadas a /api/* hacia las funciones serverless
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/api/:splat"
+  status = 200
+
