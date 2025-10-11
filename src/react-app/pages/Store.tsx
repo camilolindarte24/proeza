@@ -75,7 +75,7 @@ export default function Store() {
   };
 
   // Sample products for demonstration
-  const sampleProducts = [
+  const sampleProducts: Product[] = [
     // {
     //   id: 1,
     //   name: "Aceite Motor Castrol GTX 15W-40",
