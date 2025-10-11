@@ -23,61 +23,49 @@ L.Marker.prototype.options.icon = DefaultIcon;
 const sampleWorkshops: Workshop[] = [
   {
     id: 1,
-    name: "AutoServicio Premium",
-    description: "Especialistas en mantenimiento preventivo y correctivo para todas las marcas",
-    address: "Calle 123 #45-67, Chapinero, Bogotá",
-    phone: "+57 (1) 234-5678",
-    email: "info@autoserviciopremium.com",
-    website: "https://autoserviciopremium.com",
-    latitude: 4.6097,
-    longitude: -74.0817,
-    rating: 4.8,
+    name: "Corresponsal Pitalito (Huila)",
+    description:
+      "Punto de confianza PROEZA para la región del Huila. Facilitamos la compra de repuestos con asesoría personalizada.",
+    address: "Calle 4 #3-45, Centro, Pitalito, Huila",
+    phone: "+57 324 4277326",
+    email: "proeza.autopartes@gmail.com",
+    website: null,
+    latitude: 1.8537, // Coordenadas aproximadas de Pitalito
+    longitude: -76.0507,
+    rating: 4.9,
     is_recommended: true,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
   },
   {
     id: 2,
-    name: "Taller Mecánico El Experto",
-    description: "30 años de experiencia en reparación automotriz. Especialistas en transmisiones",
-    address: "Carrera 50 #12-34, Zona Industrial, Bogotá",
-    phone: "+57 (1) 345-6789",
-    email: "contacto@tallerelexperto.com",
+    name: "Corresponsal Ortega (Tolima)",
+    description:
+      "Punto de confianza PROEZA en Tolima. Tu aliado local para repuestos automotrices de calidad.",
+    address: "INVERSIONES FERREALBANO S.A.S, Km 8 via Guamo - Ortega",
+    phone: "+57 324 4277326",
+    email: "proeza.autopartes@gmail.com",
     website: null,
-    latitude: 4.5981,
-    longitude: -74.0758,
-    rating: 4.6,
+    latitude: 3.9373, // Coordenadas aproximadas de Ortega
+    longitude: -75.2219,
+    rating: 4.7,
     is_recommended: true,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
   },
   {
     id: 3,
-    name: "Centro Automotriz Integral",
-    description: "Servicio completo: mecánica, electricidad, aire acondicionado y latonería",
-    address: "Avenida 68 #23-45, Engativá, Bogotá",
-    phone: "+57 (1) 456-7890",
-    email: "info@centrointegral.com",
-    website: "https://centrointegral.com",
-    latitude: 4.6482,
-    longitude: -74.1034,
-    rating: 4.5,
+    name: "Corresponsal Granada (Meta)",
+    description:
+      "Punto de confianza PROEZA en el Meta. Apoyamos a los trabajadores rurales con repuestos confiables.",
+    address: "Calle 7 #6-23, Centro, Granada, Meta",
+    phone: "+57 324 4277326",
+    email: "proeza.autopartes@gmail.com",
+    website: null,
+    latitude: 3.5466, // Coordenadas aproximadas de Granada (Meta)
+    longitude: -73.7069,
+    rating: 4.8,
     is_recommended: true,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-  {
-    id: 4,
-    name: "Electro Auto Diagnóstico",
-    description: "Especialistas en diagnóstico electrónico y sistemas de inyección",
-    address: "Calle 72 #11-28, Zona Rosa, Bogotá",
-    phone: "+57 (1) 567-8901",
-    email: "diagnostico@electroauto.com",
-    website: "https://electroauto.com",
-    latitude: 4.6533,
-    longitude: -74.0640,
-    rating: 4.7,
-    is_recommended: false,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
   },
@@ -85,9 +73,19 @@ const sampleWorkshops: Workshop[] = [
 
 export default function Workshops() {
   const [workshops, setWorkshops] = useState<Workshop[]>(sampleWorkshops);
-  const [selectedWorkshop, setSelectedWorkshop] = useState<Workshop | null>(null);
+  const [selectedWorkshop, setSelectedWorkshop] = useState<Workshop | null>(
+    null
+  );
   const [showOnlyRecommended, setShowOnlyRecommended] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+
+  const goFormDocs = () => {
+    console.log("Entro a goFormDocs");
+    window.open(
+      "https://docs.google.com/forms/d/e/1FAIpQLSd1EnZXBV9FHaPMFqe8jN54gUEZ8Hdczj2kesdWT0VvgaxfrA/viewform?usp=dialog",
+      "_blank"
+    );
+  };
 
   useEffect(() => {
     loadWorkshops();
@@ -96,22 +94,24 @@ export default function Workshops() {
   const loadWorkshops = async () => {
     setIsLoading(true);
     try {
-      const url = showOnlyRecommended ? "/api/workshops?recommended=true" : "/api/workshops";
+      const url = showOnlyRecommended
+        ? "/api/workshops?recommended=true"
+        : "/api/workshops";
       const response = await fetch(url);
       const data = await response.json();
       if (response.ok && data.workshops) {
         setWorkshops(data.workshops);
       } else {
         // Use sample data if API fails
-        const filtered = showOnlyRecommended 
-          ? sampleWorkshops.filter(w => w.is_recommended)
+        const filtered = showOnlyRecommended
+          ? sampleWorkshops.filter((w) => w.is_recommended)
           : sampleWorkshops;
         setWorkshops(filtered);
       }
     } catch (error) {
       console.error("Error loading workshops:", error);
-      const filtered = showOnlyRecommended 
-        ? sampleWorkshops.filter(w => w.is_recommended)
+      const filtered = showOnlyRecommended
+        ? sampleWorkshops.filter((w) => w.is_recommended)
         : sampleWorkshops;
       setWorkshops(filtered);
     } finally {
@@ -119,26 +119,27 @@ export default function Workshops() {
     }
   };
 
-  const filteredWorkshops = workshops.filter(workshop => 
-    !showOnlyRecommended || workshop.is_recommended
+  const filteredWorkshops = workshops.filter(
+    (workshop) => !showOnlyRecommended || workshop.is_recommended
   );
 
   // Center map on Bogotá
   const mapCenter: [number, number] = [4.6097, -74.0817];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-green-50 py-12">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen py-12 bg-gradient-to-br from-slate-50 to-green-50">
+      <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center mb-12">
-          <div className="inline-flex p-4 rounded-full bg-gradient-to-r from-green-500 to-emerald-600 mb-6">
-            <MapPin className="h-12 w-12 text-white" />
+        <div className="mb-12 text-center">
+          <div className="inline-flex p-4 mb-6 rounded-full bg-gradient-to-r from-green-500 to-emerald-600">
+            <MapPin className="w-12 h-12 text-white" />
           </div>
           <h1 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4 font-['Poppins']">
-            Talleres Recomendados
+            Puntos de confianza
           </h1>
-          <p className="text-xl text-slate-600 max-w-2xl mx-auto">
-            Encuentra talleres de confianza cerca de ti. Todos verificados por nuestro equipo.
+          <p className="max-w-2xl mx-auto text-xl text-slate-600">
+            Encuentra talleres de confianza cerca de ti. Todos verificados por
+            nuestro equipo.
           </p>
         </div>
 
@@ -153,27 +154,31 @@ export default function Workshops() {
                   : "bg-white text-slate-700 hover:bg-slate-50 shadow-md"
               }`}
             >
-              Solo Recomendados
+              Puntos de confianza
             </button>
             <button
-              onClick={() => setShowOnlyRecommended(false)}
+              onClick={() => goFormDocs()}
               className={`px-6 py-3 rounded-xl font-semibold transition-all duration-200 ${
                 !showOnlyRecommended
                   ? "bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-lg"
                   : "bg-white text-slate-700 hover:bg-slate-50 shadow-md"
               }`}
             >
-              Todos los Talleres
+              ¿Quieres ser corresponsal?
             </button>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
           {/* Map */}
-          <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+          <div className="overflow-hidden bg-white shadow-xl rounded-2xl">
             <div className="p-6 border-b border-slate-200">
-              <h2 className="text-xl font-bold text-slate-900">Mapa de Talleres</h2>
-              <p className="text-slate-600">Haz clic en los marcadores para ver detalles</p>
+              <h2 className="text-xl font-bold text-slate-900">
+                Mapa de Talleres
+              </h2>
+              <p className="text-slate-600">
+                Haz clic en los marcadores para ver detalles
+              </p>
             </div>
             <div className="h-96 lg:h-[500px]">
               <MapContainer
@@ -186,7 +191,7 @@ export default function Workshops() {
                   url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
                 {filteredWorkshops
-                  .filter(workshop => workshop.latitude && workshop.longitude)
+                  .filter((workshop) => workshop.latitude && workshop.longitude)
                   .map((workshop) => (
                     <Marker
                       key={workshop.id}
@@ -197,14 +202,14 @@ export default function Workshops() {
                     >
                       <Popup>
                         <div className="p-2">
-                          <h3 className="font-bold text-slate-900 mb-1">
+                          <h3 className="mb-1 font-bold text-slate-900">
                             {workshop.name}
                           </h3>
-                          <p className="text-sm text-slate-600 mb-2">
+                          <p className="mb-2 text-sm text-slate-600">
                             {workshop.description}
                           </p>
-                          <div className="flex items-center space-x-1 mb-2">
-                            <Star className="h-4 w-4 text-yellow-400 fill-current" />
+                          <div className="flex items-center mb-2 space-x-1">
+                            <Star className="w-4 h-4 text-yellow-400 fill-current" />
                             <span className="text-sm font-semibold">
                               {workshop.rating}
                             </span>
@@ -224,11 +229,11 @@ export default function Workshops() {
           <div className="space-y-6">
             <div className="flex items-center justify-between">
               <h2 className="text-xl font-bold text-slate-900">
-                {showOnlyRecommended ? "Talleres Recomendados" : "Todos los Talleres"}
+                {showOnlyRecommended
+                  ? "Puntos de confianza"
+                  : "¿Quieres ser corresponsal?"}
               </h2>
-              {isLoading && (
-                <div className="text-slate-500">Cargando...</div>
-              )}
+              {isLoading && <div className="text-slate-500">Cargando...</div>}
             </div>
 
             <div className="space-y-4 max-h-[500px] overflow-y-auto">
@@ -244,53 +249,53 @@ export default function Workshops() {
                 >
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex-1">
-                      <div className="flex items-center space-x-2 mb-1">
+                      <div className="flex items-center mb-1 space-x-2">
                         <h3 className="text-lg font-bold text-slate-900">
                           {workshop.name}
                         </h3>
                         {workshop.is_recommended && (
-                          <span className="bg-green-100 text-green-800 text-xs font-semibold px-2 py-1 rounded-full flex items-center space-x-1">
-                            <Award className="h-3 w-3" />
+                          <span className="flex items-center px-2 py-1 space-x-1 text-xs font-semibold text-green-800 bg-green-100 rounded-full">
+                            <Award className="w-3 h-3" />
                             <span>Recomendado</span>
                           </span>
                         )}
                       </div>
-                      <div className="flex items-center space-x-1 mb-2">
-                        <Star className="h-4 w-4 text-yellow-400 fill-current" />
+                      <div className="flex items-center mb-2 space-x-1">
+                        <Star className="w-4 h-4 text-yellow-400 fill-current" />
                         <span className="font-semibold text-slate-700">
                           {workshop.rating}
                         </span>
-                        <span className="text-slate-500 text-sm">
+                        <span className="text-sm text-slate-500">
                           ({Math.floor(Math.random() * 100) + 10} reseñas)
                         </span>
                       </div>
                     </div>
                   </div>
 
-                  <p className="text-slate-600 mb-4 line-clamp-2">
+                  <p className="mb-4 text-slate-600 line-clamp-2">
                     {workshop.description}
                   </p>
 
                   <div className="space-y-2">
                     <div className="flex items-center space-x-2 text-slate-600">
-                      <MapPin className="h-4 w-4" />
+                      <MapPin className="w-4 h-4" />
                       <span className="text-sm">{workshop.address}</span>
                     </div>
                     {workshop.phone && (
                       <div className="flex items-center space-x-2 text-slate-600">
-                        <Phone className="h-4 w-4" />
+                        <Phone className="w-4 h-4" />
                         <span className="text-sm">{workshop.phone}</span>
                       </div>
                     )}
                     {workshop.email && (
                       <div className="flex items-center space-x-2 text-slate-600">
-                        <Mail className="h-4 w-4" />
+                        <Mail className="w-4 h-4" />
                         <span className="text-sm">{workshop.email}</span>
                       </div>
                     )}
                     {workshop.website && (
                       <div className="flex items-center space-x-2 text-slate-600">
-                        <Globe className="h-4 w-4" />
+                        <Globe className="w-4 h-4" />
                         <a
                           href={workshop.website}
                           target="_blank"
@@ -304,9 +309,9 @@ export default function Workshops() {
                     )}
                   </div>
 
-                  <div className="flex items-center space-x-4 mt-4 pt-4 border-t border-slate-200">
+                  <div className="flex items-center pt-4 mt-4 space-x-4 border-t border-slate-200">
                     <div className="flex items-center space-x-1 text-slate-500">
-                      <Clock className="h-4 w-4" />
+                      <Clock className="w-4 h-4" />
                       <span className="text-sm">Lun-Vie 8:00-18:00</span>
                     </div>
                   </div>
@@ -317,44 +322,55 @@ export default function Workshops() {
         </div>
 
         {/* Info Section */}
-        <div className="mt-12 bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl p-8">
-          <div className="text-center mb-8">
-            <h2 className="text-2xl font-bold text-slate-900 mb-4">
-              ¿Por qué recomendamos estos talleres?
+        <div className="p-8 mt-12 bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl">
+          <div className="mb-8 text-center">
+            <h2 className="mb-4 text-2xl font-bold text-slate-900">
+              ¿Porque es mejor comprar tu repuesto con PROEZA?
             </h2>
-            <p className="text-xl text-slate-600 max-w-2xl mx-auto">
-              Todos nuestros talleres recomendados han sido cuidadosamente seleccionados
+            <p className="max-w-2xl mx-auto text-xl text-slate-600">
+              Todos nuestros puntos de confianza han sido cuidadosamente
+              seleccionados. Son personas y negocios de tu comunidad que
+              facilitan tu vida.
             </p>
           </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
             <div className="text-center">
-              <div className="inline-flex p-4 rounded-full bg-gradient-to-r from-green-500 to-emerald-600 mb-4">
-                <Award className="h-8 w-8 text-white" />
+              <div className="inline-flex p-4 mb-4 rounded-full bg-gradient-to-r from-green-500 to-emerald-600">
+                <Award className="w-8 h-8 text-white" />
               </div>
-              <h3 className="font-bold text-slate-900 mb-2">Calidad Verificada</h3>
+              <h3 className="mb-2 font-bold text-slate-900">
+                Generas economía local
+              </h3>
               <p className="text-slate-600">
-                Inspecciones regulares y certificaciones de calidad
+                Parte del margen queda en tu municipio, apoyando empleo y
+                progreso local.
               </p>
             </div>
-            
+
             <div className="text-center">
-              <div className="inline-flex p-4 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 mb-4">
-                <Star className="h-8 w-8 text-white" />
+              <div className="inline-flex p-4 mb-4 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600">
+                <Star className="w-8 h-8 text-white" />
               </div>
-              <h3 className="font-bold text-slate-900 mb-2">Excelentes Reseñas</h3>
+              <h3 className="mb-2 font-bold text-slate-900">
+                Asesoría personalizada y real
+              </h3>
               <p className="text-slate-600">
-                Más de 4.5 estrellas promedio de satisfacción
+                Aquí siempre estarás en contacto con un asesor que te ayuda a
+                validar compatibilidad, marca, referencia y calidad.
               </p>
             </div>
-            
+
             <div className="text-center">
-              <div className="inline-flex p-4 rounded-full bg-gradient-to-r from-purple-500 to-pink-600 mb-4">
-                <Clock className="h-8 w-8 text-white" />
+              <div className="inline-flex p-4 mb-4 rounded-full bg-gradient-to-r from-purple-500 to-pink-600">
+                <Clock className="w-8 h-8 text-white" />
               </div>
-              <h3 className="font-bold text-slate-900 mb-2">Experiencia Comprobada</h3>
+              <h3 className="mb-2 font-bold text-slate-900">
+                Entrega garantizada y sin riesgo de estafa
+              </h3>
               <p className="text-slate-600">
-                Mínimo 5 años de experiencia en el mercado
+                El Punto de Confianza recibe y entrega tu repuesto. No tienes
+                que preocuparte por envíos fraudulentos o plataformas anónimas
               </p>
             </div>
           </div>

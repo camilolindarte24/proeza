@@ -24,7 +24,7 @@ export default function PartsSearch() {
     setError("");
 
     try {
-      const url = `https://www.regcheck.org.uk/api/reg.asmx/CheckColombia?RegistrationNumber=${licensePlate.toUpperCase()}&username=camilo10`;
+      const url = `https://www.regcheck.org.uk/api/reg.asmx/CheckColombia?RegistrationNumber=${licensePlate.toUpperCase()}&username=ProezaAutomotriz`;
       const response = await axios.get(url, { responseType: "text" });
 
       // ✅ Usamos DOMParser nativo del navegador

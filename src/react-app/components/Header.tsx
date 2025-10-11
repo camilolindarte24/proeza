@@ -9,7 +9,7 @@ export default function Header() {
     { path: "/repuestos", label: "¿Necesitas un Repuesto?", icon: Wrench },
     { path: "/tienda", label: "Tienda Automotriz", icon: Car },
     { path: "/entusiastas", label: "Amantes de los Carros", icon: Heart },
-    { path: "/talleres", label: "Talleres Recomendados", icon: MapPin },
+    { path: "/talleres", label: "Puntos de confianza", icon: MapPin },
   ];
 
   return (

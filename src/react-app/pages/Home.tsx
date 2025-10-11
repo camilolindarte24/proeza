@@ -21,7 +21,7 @@ export default function Home() {
     color: "from-purple-500 to-pink-600"
   }, {
     icon: MapPin,
-    title: "Talleres Recomendados",
+    title: "Puntos de confianza",
     description: "Encuentra talleres de confianza cerca de ti con nuestro mapa interactivo.",
     link: "/talleres",
     color: "from-green-500 to-emerald-600"
