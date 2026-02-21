@@ -8,18 +8,13 @@
 # Opcional: Variables de entorno
 [build.environment]
   NODE_VERSION = "22.20.0"
-  # Si usas SQLite en producción, puedes definir aquí la ruta de tu DB
-  DATABASE_FILE = "database.sqlite"
+  # Número de WhatsApp destino en formato internacional sin +
+  # Ejemplo: 573001234567
+  VITE_WHATSAPP_NUMBER = "573001234567"
 
 # Redirige todas las rutas SPA a index.html
 [[redirects]]
   from = "/*"
   to = "/index.html"
-  status = 200
-
-# Redirige las llamadas a /api/* hacia las funciones serverless
-[[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/api/:splat"
   status = 200
 

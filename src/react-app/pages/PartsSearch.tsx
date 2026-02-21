@@ -13,6 +13,21 @@ export default function PartsSearch() {
   const [customerEmail, setCustomerEmail] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
   const [requestSent, setRequestSent] = useState(false);
+  const [whatsappUrl, setWhatsappUrl] = useState("");
+
+  const normalizePhone = (phone: string) => phone.replace(/\D/g, "");
+  const configuredWhatsappNumber = normalizePhone(
+    import.meta.env.VITE_WHATSAPP_NUMBER || ""
+  );
+
+  const getFallbackVehicle = (plate: string) => ({
+    CarMake: "No disponible",
+    CarModel: "No disponible",
+    RegistrationYear: "No disponible",
+    FuelType: "No disponible",
+    VehicleType: "No disponible",
+    Plate: plate.toUpperCase(),
+  });
 
   const searchVehicle = async () => {
     if (!licensePlate.trim()) {
@@ -30,10 +45,37 @@ export default function PartsSearch() {
       // ✅ Usamos DOMParser nativo del navegador
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(response.data, "text/xml");
+      const parserError = xmlDoc.getElementsByTagName("parsererror")[0];
+
+      if (parserError) {
+        setVehicleInfo(getFallbackVehicle(licensePlate));
+        setError(
+          "No fue posible leer la respuesta del servicio de placas. Puedes continuar con la cotización."
+        );
+        return;
+      }
 
       const vehicleJsonNode = xmlDoc.getElementsByTagName("vehicleJson")[0];
-      const vehicleJson = vehicleJsonNode?.textContent;
-      const vehicle = vehicleJson ? JSON.parse(vehicleJson) : null;
+      const vehicleJson = vehicleJsonNode?.textContent?.trim();
+
+      if (!vehicleJson || /malformed\s+json/i.test(vehicleJson)) {
+        setVehicleInfo(getFallbackVehicle(licensePlate));
+        setError(
+          "El proveedor de placas devolvió datos inválidos. Puedes continuar con la cotización."
+        );
+        return;
+      }
+
+      let vehicle: any = null;
+      try {
+        vehicle = JSON.parse(vehicleJson);
+      } catch (_parseError) {
+        setVehicleInfo(getFallbackVehicle(licensePlate));
+        setError(
+          "No se pudo procesar la información de la placa en este momento. Puedes continuar con la cotización."
+        );
+        return;
+      }
 
       if (vehicle) {
         setVehicleInfo(vehicle);
@@ -48,40 +90,64 @@ export default function PartsSearch() {
     }
   };
 
-  const submitRequest = async () => {
+  const submitRequest = () => {
+    if (!licensePlate.trim()) {
+      setError("Por favor ingresa una placa válida.");
+      return;
+    }
+
     if (!partDescription.trim()) {
       setError("Por favor describe el repuesto que necesitas");
       return;
     }
 
-    setIsLoading(true);
+    if (!configuredWhatsappNumber) {
+      setError(
+        "WhatsApp no está configurado. Define VITE_WHATSAPP_NUMBER en Netlify para enviar cotizaciones."
+      );
+      return;
+    }
+
     setError("");
 
-    try {
-      const response = await fetch("/api/parts-request", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          license_plate: licensePlate,
-          part_description: partDescription,
-          customer_email: customerEmail,
-          customer_phone: customerPhone,
-        }),
-      });
+    const whatsappNumber = configuredWhatsappNumber;
+    const createdAt = new Date().toLocaleString("es-CO", {
+      timeZone: "America/Bogota",
+      dateStyle: "short",
+      timeStyle: "short",
+    });
 
-      if (response.ok) {
-        setRequestSent(true);
-      } else {
-        const data = await response.json();
-        setError(data.error || "Error al enviar la solicitud");
-      }
-    } catch (err) {
-      setError("Error de conexión. Intenta nuevamente.");
-    } finally {
-      setIsLoading(false);
+    const messageLines = [
+      "Hola 👋, quiero cotizar un repuesto con Proeza Automotriz.",
+      "",
+      "Datos de la solicitud:",
+      `• Placa: ${licensePlate.toUpperCase()}`,
+      `• Repuesto: ${partDescription.trim()}`,
+    ];
+
+    if (customerPhone.trim()) {
+      messageLines.push(`• Teléfono: ${customerPhone.trim()}`);
     }
+
+    if (customerEmail.trim()) {
+      messageLines.push(`• Email: ${customerEmail.trim()}`);
+    }
+
+    messageLines.push(
+      "",
+      `• Fecha: ${createdAt}`,
+      "",
+      "¿Me pueden confirmar precio y disponibilidad, por favor?",
+      "Gracias 🙌"
+    );
+
+    const nextWhatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
+      messageLines.join("\n")
+    )}`;
+
+    setWhatsappUrl(nextWhatsappUrl);
+    setRequestSent(true);
+    window.open(nextWhatsappUrl, "_blank", "noopener,noreferrer");
   };
 
   if (requestSent) {
@@ -100,6 +166,16 @@ export default function PartsSearch() {
               <strong>{licensePlate}</strong>. Nos pondremos en contacto contigo
               pronto.
             </p>
+            {whatsappUrl && (
+              <a
+                href={whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center px-6 py-3 mb-4 font-semibold text-white transition-all duration-200 bg-gradient-to-r from-emerald-500 to-green-600 rounded-xl hover:shadow-lg"
+              >
+                Abrir WhatsApp
+              </a>
+            )}
             <button
               onClick={() => {
                 setRequestSent(false);
@@ -108,6 +184,7 @@ export default function PartsSearch() {
                 setPartDescription("");
                 setCustomerEmail("");
                 setCustomerPhone("");
+                setWhatsappUrl("");
               }}
               className="px-6 py-3 font-semibold text-white transition-all duration-200 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl hover:shadow-lg"
             >
