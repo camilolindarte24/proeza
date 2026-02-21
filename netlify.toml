@@ -9,8 +9,8 @@
 [build.environment]
   NODE_VERSION = "22.20.0"
   # Número de WhatsApp destino en formato internacional sin +
-  # Ejemplo: 573001234567
-  VITE_WHATSAPP_NUMBER = "573001234567"
+  # Ejemplo: 573108712661
+  VITE_WHATSAPP_NUMBER = "573108712661"
 
 # Redirige todas las rutas SPA a index.html
 [[redirects]]
