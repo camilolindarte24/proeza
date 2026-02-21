@@ -27,7 +27,7 @@ const sampleWorkshops: Workshop[] = [
     description:
       "Punto de confianza PROEZA para la región del Huila. Facilitamos la compra de repuestos con asesoría personalizada.",
     address: "Calle 4 #3-45, Centro, Pitalito, Huila",
-    phone: "+57 324 4277326",
+    phone: "573108712661",
     email: "proeza.autopartes@gmail.com",
     website: null,
     latitude: 1.8537, // Coordenadas aproximadas de Pitalito
@@ -43,7 +43,7 @@ const sampleWorkshops: Workshop[] = [
     description:
       "Punto de confianza PROEZA en Tolima. Tu aliado local para repuestos automotrices de calidad.",
     address: "INVERSIONES FERREALBANO S.A.S, Km 8 via Guamo - Ortega",
-    phone: "+57 324 4277326",
+    phone: "573108712661",
     email: "proeza.autopartes@gmail.com",
     website: null,
     latitude: 3.9373, // Coordenadas aproximadas de Ortega
@@ -59,7 +59,7 @@ const sampleWorkshops: Workshop[] = [
     description:
       "Punto de confianza PROEZA en el Meta. Apoyamos a los trabajadores rurales con repuestos confiables.",
     address: "Calle 7 #6-23, Centro, Granada, Meta",
-    phone: "+57 324 4277326",
+    phone: "573108712661",
     email: "proeza.autopartes@gmail.com",
     website: null,
     latitude: 3.5466, // Coordenadas aproximadas de Granada (Meta)
