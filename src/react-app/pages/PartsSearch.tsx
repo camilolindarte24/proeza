@@ -29,26 +29,55 @@ export default function PartsSearch() {
     Plate: plate.toUpperCase(),
   });
 
+  const sanitizePlate = (plate: string) =>
+    plate.toUpperCase().replace(/[^A-Z0-9]/g, "").trim();
+
   const searchVehicle = async () => {
-    if (!licensePlate.trim()) {
+    const normalizedPlate = sanitizePlate(licensePlate);
+
+    if (!normalizedPlate) {
       setError("Por favor ingresa un número de placa válido.");
       return;
     }
+
+    setLicensePlate(normalizedPlate);
 
     setIsLoading(true);
     setError("");
 
     try {
-      const url = `https://www.regcheck.org.uk/api/reg.asmx/CheckColombia?RegistrationNumber=${licensePlate.toUpperCase()}&username=ProezaAutomotriz`;
-      const response = await axios.get(url, { responseType: "text" });
+      const encodedPlate = encodeURIComponent(normalizedPlate);
+      const url = `https://www.regcheck.org.uk/api/reg.asmx/CheckColombia?RegistrationNumber=${encodedPlate}&username=ProezaAutomotriz`;
+      const response = await axios.get<string>(url, {
+        responseType: "text",
+        validateStatus: () => true,
+      });
+
+      const responseText = (response.data || "").toString();
+
+      if (
+        response.status >= 500 &&
+        /malformed\s+json/i.test(responseText)
+      ) {
+        setVehicleInfo(getFallbackVehicle(normalizedPlate));
+        setError(
+          "La placa existe, pero el proveedor devolvió datos inválidos. Puedes continuar con la cotización."
+        );
+        return;
+      }
+
+      if (response.status < 200 || response.status >= 300) {
+        setError("No fue posible consultar la placa en este momento. Intenta nuevamente.");
+        return;
+      }
 
       // ✅ Usamos DOMParser nativo del navegador
       const parser = new DOMParser();
-      const xmlDoc = parser.parseFromString(response.data, "text/xml");
+      const xmlDoc = parser.parseFromString(responseText, "text/xml");
       const parserError = xmlDoc.getElementsByTagName("parsererror")[0];
 
       if (parserError) {
-        setVehicleInfo(getFallbackVehicle(licensePlate));
+        setVehicleInfo(getFallbackVehicle(normalizedPlate));
         setError(
           "No fue posible leer la respuesta del servicio de placas. Puedes continuar con la cotización."
         );
@@ -59,7 +88,7 @@ export default function PartsSearch() {
       const vehicleJson = vehicleJsonNode?.textContent?.trim();
 
       if (!vehicleJson || /malformed\s+json/i.test(vehicleJson)) {
-        setVehicleInfo(getFallbackVehicle(licensePlate));
+        setVehicleInfo(getFallbackVehicle(normalizedPlate));
         setError(
           "El proveedor de placas devolvió datos inválidos. Puedes continuar con la cotización."
         );
@@ -70,7 +99,7 @@ export default function PartsSearch() {
       try {
         vehicle = JSON.parse(vehicleJson);
       } catch (_parseError) {
-        setVehicleInfo(getFallbackVehicle(licensePlate));
+        setVehicleInfo(getFallbackVehicle(normalizedPlate));
         setError(
           "No se pudo procesar la información de la placa en este momento. Puedes continuar con la cotización."
         );
